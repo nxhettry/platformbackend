@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import Loading from "@/app/loading";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useLoggedIn } from "@/components/AuthContext";
