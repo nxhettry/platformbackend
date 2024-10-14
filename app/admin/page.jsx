@@ -12,7 +12,7 @@ const Admin = () => {
             amount: formData.get('amount')
         };
 
-        const res = await fetch('http://localhost:8080/api/addAssets/topup', {
+        const res = await fetch('http://35.154.71.2/api/addAssets/topup', {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json'

@@ -11,7 +11,7 @@ const Home = () => {
   useEffect(() => {
     // Fetch all ads
     const  fetchAds = async() => {
-      const res = await fetch("http://localhost:8080/api/p2p/ad/getallad/buy");
+      const res = await fetch("http://35.154.71.2/api/p2p/ad/getallad/buy");
       const data = await res.json();
       console.log(data);
 

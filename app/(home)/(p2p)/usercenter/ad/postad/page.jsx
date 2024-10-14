@@ -118,7 +118,7 @@ const Postad = () => {
 
     // Submit the data to the server
     try {
-      const res = await fetch("http://localhost:8080/api/ad/postad", {
+      const res = await fetch("http://35.154.71.2/api/ad/postad", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

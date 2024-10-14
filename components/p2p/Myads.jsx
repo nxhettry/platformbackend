@@ -33,7 +33,7 @@ const Myads = () => {
           toast({ title: "Could not catch email" });
         }
         const res = await fetch(
-          `http://localhost:8080/api/ad/getallad/myads?email=${encodeURIComponent(userEmail)}`
+          `http://35.154.71.2/api/ad/getallad/myads?email=${encodeURIComponent(userEmail)}`
         );
         const data = await res.json();
         setMyAds(data);
