@@ -80,7 +80,7 @@ const Dashboard = () => {
     const userEmail = session ? session.user.email : email;
     const fetchBalance = async () => {
       try {
-        const res = await fetch("http://35.154.71.2/api/balance/getbalance", {
+        const res = await fetch("https://binaryp2p.sytes.net/api/balance/getbalance", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -98,7 +98,7 @@ const Dashboard = () => {
     fetchBalance();
 
     const userDetails = async () => {
-      const res = await fetch("http://35.154.71.2/api/usercenter/getUserInfo", {
+      const res = await fetch("https://binaryp2p.sytes.net/api/usercenter/getUserInfo", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

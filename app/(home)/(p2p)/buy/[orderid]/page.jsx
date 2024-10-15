@@ -59,7 +59,7 @@ const Mainbuy = ({ params }) => {
       try {
         let data;
 
-        const res = await fetch("http://35.154.71.2/api/p2p/order/getThisOrder", {
+        const res = await fetch("https://binaryp2p.sytes.net/api/p2p/order/getThisOrder", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -112,7 +112,7 @@ const Mainbuy = ({ params }) => {
 
   // Function to handle the mark paid button
   const handleMarkpaid = async () => {
-    const res = await fetch("http://35.154.71.2/api/p2p/order/getOrderStatus", {
+    const res = await fetch("https://binaryp2p.sytes.net/api/p2p/order/getOrderStatus", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -191,7 +191,7 @@ const Mainbuy = ({ params }) => {
     try {
       if (!orderDetails.orderid) return;
 
-      const res = await fetch("http://35.154.71.2/api/p2p/order/cancelP2POrder", {
+      const res = await fetch("https://binaryp2p.sytes.net/api/p2p/order/cancelP2POrder", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

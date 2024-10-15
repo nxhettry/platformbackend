@@ -59,7 +59,7 @@ const Assets = () => {
     const userEmail = session ? session.user.email : email;
     const fetchBalance = async () => {
       try {
-        const res = await fetch("http://35.154.71.2/api/balance/getBalance", {
+        const res = await fetch("https://binaryp2p.sytes.net/api/balance/getBalance", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

@@ -87,7 +87,7 @@ const Balanceinfo = ({ assets, session, loggedIn, email, status }) => {
     try {
       setLoading(true);
 
-      const res = await fetch("http://35.154.71.2/api/p2p/order/createSwiftBuy", {
+      const res = await fetch("https://binaryp2p.sytes.net/api/p2p/order/createSwiftBuy", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
