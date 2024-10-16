@@ -108,7 +108,7 @@ const Myad = () => {
           toast({ title: "Could not catch email" });
         }
 
-        const res = await fetch("http://localhost:8080/api/p2p/ad/getallad/myads/mobile", {
+        const res = await fetch("https://binaryp2p.sytes.net/api/p2p/ad/getallad/myads/mobile", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

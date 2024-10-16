@@ -29,7 +29,7 @@ const Authbody = ({ loginpage, signuppage }) => {
             body = JSON.stringify({ email, login: false });
           }
 
-          const res = await fetch("http://localhost:8080/api/auth/register", {
+          const res = await fetch("https://binaryp2p.sytes.net/api/auth/register", {
             method: "POST",
             body: body,
             headers: {
@@ -70,7 +70,7 @@ const Authbody = ({ loginpage, signuppage }) => {
 
     //Logic for manual signup
     if (signuppage) {
-      const res = await fetch("http://localhost:8080/api/auth/register", {
+      const res = await fetch("https://binaryp2p.sytes.net/api/auth/register", {
         method: "POST",
         body: JSON.stringify(data),
         headers: {
@@ -95,7 +95,7 @@ const Authbody = ({ loginpage, signuppage }) => {
 
     //Logic for manual Login
     if (loginpage) {
-      const res = await fetch("http://localhost:8080/api/auth/login", {
+      const res = await fetch("https://binaryp2p.sytes.net/api/auth/login", {
         method: "POST",
         body: JSON.stringify(data),
         headers: {

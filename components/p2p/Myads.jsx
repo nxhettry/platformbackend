@@ -33,7 +33,7 @@ const Myads = () => {
           toast({ title: "Could not catch email" });
         }
         const res = await fetch(
-          `http://localhost:8080/api/p2p/ad/getallad/myads?email=${encodeURIComponent(userEmail)}`
+          `https://binaryp2p.sytes.net/api/p2p/ad/getallad/myads?email=${encodeURIComponent(userEmail)}`
         );
         const data = await res.json();
         setMyAds(data);

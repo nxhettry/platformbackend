@@ -14,7 +14,7 @@ const RecentTransactions = () => {
       const userEmail = session?.user?.email || (loggedIn ? email : null);
       if (!userEmail) return;
 
-      const res = await fetch("http://localhost:8080/api/wallet/getBscWallet", {
+      const res = await fetch("https://binaryp2p.sytes.net/api/wallet/getBscWallet", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: userEmail }),
@@ -64,7 +64,7 @@ const RecentTransactions = () => {
     const userEmail = session?.user?.email || (loggedIn ? email : null);
     if (!userEmail || !address || !transactions.length) return;
 
-    await fetch("http://localhost:8080/api/wallet/saveTransactions", {
+    await fetch("https://binaryp2p.sytes.net/api/wallet/saveTransactions", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ transactions, userWallet: address, email: userEmail }),
@@ -78,7 +78,7 @@ const RecentTransactions = () => {
       if (!userEmail) return;
 
       try {
-        const res = await fetch("http://localhost:8080/api/wallet/getUserTransactions", {
+        const res = await fetch("https://binaryp2p.sytes.net/api/wallet/getUserTransactions", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email: userEmail }),
