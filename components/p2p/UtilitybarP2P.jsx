@@ -224,7 +224,7 @@ const Utilitybar = ({ setShowAds, allAds, isBuy, isSell }) => {
                     </li>
                     <li>
                       <Link
-                        href="#"
+                        href="/usercenter"
                         className="block px-4 py-2 text-md font-bold text-gray-700 hover:bg-gray-100 w-full text-left"
                         onClick={handleDropdownItemClick}
                       >
@@ -420,7 +420,7 @@ const Utilitybar = ({ setShowAds, allAds, isBuy, isSell }) => {
               <ul className="py-1">
                 <li>
                   <Link
-                    href="#"
+                    href="/usercenter"
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
                     onClick={handleDropdownItemClick}
                   >
