@@ -56,7 +56,7 @@ const Mainbuy = ({ params }) => {
     const fetchDetails = async (orderid) => {
       try {
         const res = await fetch(
-          "https://binaryp2p.sytes.net/api/p2p/order/getThisOrder",
+          "http://localhost:8080/api/p2p/order/getThisOrder",
           {
             method: "POST",
             headers: {
@@ -126,7 +126,7 @@ const Mainbuy = ({ params }) => {
   // Function to handle the mark paid button
   const handleMarkpaid = async () => {
     const res = await fetch(
-      "https://binaryp2p.sytes.net/api/p2p/order/getOrderStatus",
+      "http://localhost:8080/api/p2p/order/getOrderStatus",
       {
         method: "POST",
         headers: {
@@ -208,7 +208,7 @@ const Mainbuy = ({ params }) => {
       if (!orderDetails.orderid) return;
 
       const res = await fetch(
-        "https://binaryp2p.sytes.net/api/p2p/order/cancelP2POrder",
+        "http://localhost:8080/api/p2p/order/cancelP2POrder",
         {
           method: "POST",
           headers: {
