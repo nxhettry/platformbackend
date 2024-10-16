@@ -73,6 +73,110 @@ const Myad = () => {
     setIsOffline(true);
   };
 
+  const handleStatusChange = async (adId) => {
+    if (!adId) {
+      return;
+    }
+
+    let userEmail;
+    if (session) {
+      userEmail = session.user.email;
+    }
+
+    if (loggedIn) {
+      userEmail = email;
+    }
+
+    if (!userEmail) {
+      return;
+    }
+
+    try {
+      const res = await fetch ("http://localhost:8080/api/p2p/ad/updatead/status", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email: userEmail, adId }),
+      })
+
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleDeleteAd = async (adId) => {
+    if (!adId) return;
+
+    let userEmail;
+    if (session) {
+      userEmail = session.user.email;
+    }
+    if (loggedIn) {
+      userEmail = email;
+    }
+
+    if (!userEmail) return;
+
+    const res = await fetch("http://localhost:8080/api/p2p/ad/updatead/delete", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ adId, email: userEmail }),
+    });
+
+    const data = res.json();
+
+    if(res.status === 200) {
+      router.refresh();
+      toast({ title: "Ad deleted" });
+      return;
+    }
+
+    toast({title: data.message});
+  };
+
+  const handleEditAd = async (adId) => {
+    if (!adId) return;
+
+    let userEmail;
+    if (session) {
+      userEmail = session.user.email;
+    }
+    if (loggedIn) {
+      userEmail = email;
+    }
+
+    if (!userEmail) return;
+
+    const newPrice = prompt("Enter new price");
+
+    if (!newPrice || isNaN(newPrice) || newPrice < 0) {
+      toast({ title: "Invalid price" });
+      return;
+    }
+
+    const res = await fetch("http://localhost:8080/api/p2p/ad/updatead/edit", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ adId, email: userEmail, newPrice }),
+    });
+
+    const data = res.json();
+
+    if(res.status === 200) {
+      router.refresh();
+      toast({ title: "Ad updated" });
+      return;
+    }
+
+    toast({title: data.message});
+
+  };
+
   const currencies = [
     { code: "NPR", label: "NPR", imgSrc: "/npr.png" },
     { code: "INR", label: "INR", imgSrc: "/inr.png" },
@@ -108,7 +212,7 @@ const Myad = () => {
           toast({ title: "Could not catch email" });
         }
 
-        const res = await fetch("https://binaryp2p.sytes.net/api/p2p/ad/getallad/myads/mobile", {
+        const res = await fetch("http://localhost:8080/api/p2p/ad/getallad/myads/mobile", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -121,7 +225,7 @@ const Myad = () => {
         if (res.status === 200) {
           setMobileAds(data.data);
         } else {
-          console.log(data.data);
+          console.log(data.message);
         }
          return;
       } catch (error) {
@@ -300,6 +404,7 @@ const Myad = () => {
                       type="checkbox"
                       name="adStatusToggle"
                       className="toggle-success toggle h-5 w-10"
+                      onChange={() => handleStatusChange(ad._id)}
                       defaultChecked
                     />
                   </div>
@@ -357,14 +462,14 @@ const Myad = () => {
                   <div className="flex gap-3 justify-center items-center">
                     <button
                       onClick={() => {
-                        toast({ title: "Edit button clicked" });
+                        handleEditAd(ad._id);
                       }}
                     >
                       <Edit size={20} style={{ color: "#4169E1" }} />
                     </button>
                     <button
                       onClick={() => {
-                        toast({ title: "Delete button clicked" });
+                        handleDeleteAd(ad._id);
                       }}
                     >
                       <Trash2

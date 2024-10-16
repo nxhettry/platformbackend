@@ -33,7 +33,9 @@ const Myads = () => {
           toast({ title: "Could not catch email" });
         }
         const res = await fetch(
-          `https://binaryp2p.sytes.net/api/p2p/ad/getallad/myads?email=${encodeURIComponent(userEmail)}`
+          `http://localhost:8080/api/p2p/ad/getallad/myads?email=${encodeURIComponent(
+            userEmail
+          )}`
         );
         const data = await res.json();
         setMyAds(data);
@@ -44,73 +46,110 @@ const Myads = () => {
     fetchData();
   }, [session, email, loggedIn, toast]);
 
-  const handleStatus = async (adId) => {
-    try {
-      if (!session) return; // Ensure session is available
-
-      // Prepare the payload
-      const payload = {
-        adId,
-        email: session.user.email, // Use email from session
-      };
-
-      // Update the status of the ad in the database
-      const res = await fetch(`/api/p2p/updatead/status`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-
-      const result = await res.json();
-
-      if (!res.ok) {
-        throw new Error(result.message || "Failed to update status");
-      }
-
-      // Update the status in the state
-      setMyAds((prevAds) =>
-        prevAds.data.map((adGroup) => ({
-          ...adGroup,
-          ads: adGroup.ads.map((ad) =>
-            ad.id === adId ? { ...ad, status: newStatus } : ad
-          ),
-        }))
-      );
-
-      toast({ title: "Please reload the page to view changes !" });
-    } catch (error) {
-      toast({ title: "Failed to update status" });
-      console.error(error);
-    }
-  };
-
   const handleDeleteAd = async (adId) => {
-    if (!session) return;
-    const data = { adId: adId, email: session.user.email };
-    try {
-      const res = await fetch(`/api/p2p/updatead/delete/`, {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
+    if (!adId) return;
 
-      if (!res.ok) {
-        throw new Error("Failed to delete ad");
-      }
-
-      setMyAds((prevAds) =>
-        prevAds.data.map((adGroup) => ({
-          ...adGroup,
-          ads: adGroup.ads.filter((ad) => ad.id !== adId),
-        }))
-      );
-
-      toast({ title: "Ad deleted successfully" });
-    } catch (error) {
-      toast({ title: "Failed to delete ad" });
-      console.log(error);
+    let userEmail;
+    if (session) {
+      userEmail = session.user.email;
     }
+    if (loggedIn) {
+      userEmail = email;
+    }
+
+    if (!userEmail) return;
+
+    const res = await fetch("http://localhost:8080/api/p2p/ad/updatead/delete", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ adId, email: userEmail }),
+    });
+
+    const data = res.json();
+
+    if(res.status === 200) {
+      router.refresh();
+      toast({ title: "Ad deleted" });
+      return;
+    }
+
+    toast({title: data.message});
   };
+
+  const handleEditAd = async (adId) => {
+    if (!adId) return;
+
+    let userEmail;
+    if (session) {
+      userEmail = session.user.email;
+    }
+    if (loggedIn) {
+      userEmail = email;
+    }
+
+    if (!userEmail) return;
+
+    const newPrice = prompt("Enter new price");
+
+    if (!newPrice || isNaN(newPrice) || newPrice < 0) {
+      toast({ title: "Invalid price" });
+      return;
+    }
+
+    const res = await fetch("http://localhost:8080/api/p2p/ad/updatead/edit", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ adId, email: userEmail, newPrice }),
+    });
+
+    const data = res.json();
+
+    if(res.status === 200) {
+      router.refresh();
+      toast({ title: "Ad updated" });
+      return;
+    }
+
+    toast({title: data.message});
+
+  };
+
+  const changeStatus = async (adId) => {
+    if (!adId) return;
+
+    let userEmail;
+    if (session) {
+      userEmail = session.user.email;
+    }
+    if (loggedIn) {
+      userEmail = email;
+    }
+
+    if (!userEmail) return;
+
+    const res = await fetch ("http://localhost:8080/api/p2p/ad/updatead/status", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ adId, email: userEmail }),
+    });
+
+    const data = res.json();
+
+    if(res.status === 200) {
+      router.refresh();
+      toast({ title: "Ad status updated" });
+      return;
+    }
+
+    toast({title: data.message});
+
+  }
 
   useEffect(() => {
     if (status === "authenticated" || loggedIn) {
@@ -124,9 +163,7 @@ const Myads = () => {
   }, [status, loggedIn, router, toast]);
 
   if (status === "loading" || loading) {
-    return (
-        <Loading />
-    );
+    return <Loading />;
   }
 
   if (myAds?.data?.length > 0) {
@@ -188,11 +225,11 @@ const Myads = () => {
                 </div>
               </div>
 
-              {/* Last Updated */}
+              {/* Time Limit */}
               <div className="pl-12 py-2 h-full flex justify-start items-start">
                 <div className="flex flex-col gap-2">
                   <p className="text-sm text-slate-700">
-                    {new Date(adGroup.date).toLocaleDateString()}
+                    {ad.timeLimitinmins} mins
                   </p>
                 </div>
               </div>
@@ -217,7 +254,7 @@ const Myads = () => {
                   {/* Publish button */}
                   <button
                     className="hover:scale-125 transition ease-in-out duration-300"
-                    onClick={() => handleStatus(ad._id, ad.status)}
+                    onClick={() => changeStatus(ad._id)}
                   >
                     {ad.status === "Online" ? (
                       <svg
@@ -255,7 +292,10 @@ const Myads = () => {
                   </button>
 
                   {/* Edit button */}
-                  <button className="hover:scale-125 transition ease-in-out duration-300">
+                  <button
+                    onClick={() => handleEditAd(ad._id)}
+                    className="hover:scale-125 transition ease-in-out duration-300"
+                  >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 20 20"
