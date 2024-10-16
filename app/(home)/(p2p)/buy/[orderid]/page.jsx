@@ -114,7 +114,10 @@ const Mainbuy = ({ params }) => {
       if (newTimer <= 0) {
         clearInterval(countdown);
         setTimer(0);
-        toast({ title: "Order has expired" });
+        if (!isComplete && !isCancelled && !isPaid) {
+          toast({ title: "Order has expired" });
+          cancelOrder();
+        }
       } else {
         setTimer(newTimer);
       }
@@ -227,6 +230,29 @@ const Mainbuy = ({ params }) => {
       });
     } catch (error) {
       console.log("An error occurred while cancelling order:", error);
+    }
+  };
+
+  const cancelOrder = async () => {
+    const res = await fetch("https://binaryp2p.sytes.net/api/p2p/order/cancelP2POrder",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          orderId: orderDetails.orderid,
+          reason: "Order timeout",
+        }),
+      }
+    );
+
+    const data = await res.json();
+
+    if (res.status === 200) {
+      toast({
+        title: "Order cancelled due to timeout",
+      });
     }
   };
 

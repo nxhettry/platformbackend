@@ -102,7 +102,9 @@ const Mainsell = ({ params }) => {
       if (newTimer <= 0) {
         clearInterval(countdown);
         setTimer(0);
-        toast({ title: "Order has expired" });
+        if (!isComplete && !isCancelled && !isPaid) {
+          toast({ title: "Order has expired" });
+        }
       } else {
         setTimer(newTimer);
       }
@@ -142,7 +144,7 @@ const Mainsell = ({ params }) => {
 
   // Function to handle the release crypto button
   const releaseCrypto = async () => {
-    const res = await fetch("/api/p2p/releaseCrypto", {
+    const res = await fetch("https://binaryp2p.sytes.net/api/p2p/order/releaseCrypto", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
