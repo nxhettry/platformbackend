@@ -16,7 +16,6 @@ import { useRef } from "react";
 import PaidConfirm from "@/components/p2p/PaidConfirm";
 import { useToast } from "@/hooks/use-toast";
 import ReleaseCrypto from "@/components/p2p/ConfirmRelase";
-import Loading from "@/app/loading";
 
 const Mainbuy = ({ params }) => {
   const { toast } = useToast();
@@ -24,7 +23,9 @@ const Mainbuy = ({ params }) => {
   const [messages, setMessages] = useState([]);
   const { orderid } = params;
   const { data: session, status } = useSession();
-  const [time, setTime] = useState(3600);
+  const [createdTime, setCreatedTime] = useState();
+  const [orderTime, setOrderTime] = useState();
+  const [timer, setTimer] = useState(3600);
   const form = useRef();
   const [orderDetails, setOrderDetails] = useState({});
   const [loading, setLoading] = useState(false);
@@ -39,10 +40,8 @@ const Mainbuy = ({ params }) => {
   const [selectedReason, setSelectedReason] = useState("");
   const [otherReason, setOtherReason] = useState("");
 
-  //To get the order details
+  // To get the order details
   useEffect(() => {
-    setLoading(true);
-
     let userEmail;
     if (session) {
       userEmail = session.user.email;
@@ -54,26 +53,27 @@ const Mainbuy = ({ params }) => {
 
     if (!userEmail) return;
 
-    //Funciton to fetch the order
     const fetchDetails = async (orderid) => {
       try {
-        let data;
+        const res = await fetch(
+          "https://binaryp2p.sytes.net/api/p2p/order/getThisOrder",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ orderid, email: userEmail }),
+          }
+        );
 
-        const res = await fetch("https://binaryp2p.sytes.net/api/p2p/order/getThisOrder", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ orderid, email: userEmail }),
-        });
-
-        data = await res.json();
+        const data = await res.json();
 
         if (res.status === 200) {
           setOrderDetails(data.data[0]);
           setIsBuyer(data.isBuyer);
           setIsSeller(!data.isBuyer);
-          setTime(data.data[0].timer * 60);
+          setOrderTime(data.data[0].timer * 60);
+          setCreatedTime(new Date(data.data[0].createdAt));
           setIsPaid(data.data[0].isPaid);
           setIsComplete(data.data[0].isComplete);
           setIsCancelled(data.data[0].isCancelled);
@@ -82,46 +82,62 @@ const Mainbuy = ({ params }) => {
             data.data[0].orderdetails.paymentDetails[0].paymentMethod
           );
         } else {
-          console.error(data.message); // Log the error message if not 200 status
+          console.error(data.message);
         }
-
-        setLoading(false);
       } catch (error) {
         console.error("An error occurred while fetching order details:", error);
       }
     };
 
-    if (!isComplete) {
-      setInterval(() => {
+    const interval = setInterval(() => {
+      if (!isComplete) {
         fetchDetails(orderid);
-      }, 7000);
-    }
-    return;
+      } else {
+        clearInterval(interval);
+      }
+    }, 1000);
+
+    fetchDetails(orderid);
+
+    return () => clearInterval(interval);
   }, [orderid, session, email, loggedIn, isComplete]);
 
-  //This formats the timer countdown
+  // This sets the timer countdown
   useEffect(() => {
-    if (time > 0) {
-      const timer = setTimeout(() => {
-        setTime((prevTime) => prevTime - 1);
-      }, 1000);
+    if (!createdTime || !orderTime) return; // Ensure both are defined
 
-      return () => clearTimeout(timer);
-    }
-  }, [time]);
+    const countdown = setInterval(() => {
+      const currentTime = new Date();
+      const timeDiff = Math.floor((currentTime - createdTime) / 1000);
+      const newTimer = orderTime - timeDiff;
+
+      if (newTimer <= 0) {
+        clearInterval(countdown);
+        setTimer(0);
+        toast({ title: "Order has expired" });
+      } else {
+        setTimer(newTimer);
+      }
+    }, 1000);
+
+    return () => clearInterval(countdown);
+  }, [orderTime, createdTime]);
 
   // Function to handle the mark paid button
   const handleMarkpaid = async () => {
-    const res = await fetch("https://binaryp2p.sytes.net/api/p2p/order/getOrderStatus", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        orderid: orderDetails.orderid,
-        status: "isPaid",
-      }),
-    });
+    const res = await fetch(
+      "https://binaryp2p.sytes.net/api/p2p/order/getOrderStatus",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          orderid: orderDetails.orderid,
+          status: "isPaid",
+        }),
+      }
+    );
 
     const data = await res.json();
 
@@ -141,7 +157,7 @@ const Mainbuy = ({ params }) => {
     }
   };
 
-  // Function to handle the timer
+  // Function to format the timer
   const formatTime = (time) => {
     const minutes = Math.floor(time / 60);
     const seconds = time % 60;
@@ -191,16 +207,19 @@ const Mainbuy = ({ params }) => {
     try {
       if (!orderDetails.orderid) return;
 
-      const res = await fetch("https://binaryp2p.sytes.net/api/p2p/order/cancelP2POrder", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          orderId: orderDetails.orderid,
-          reason: finalReason,
-        }),
-      });
+      const res = await fetch(
+        "https://binaryp2p.sytes.net/api/p2p/order/cancelP2POrder",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            orderId: orderDetails.orderid,
+            reason: finalReason,
+          }),
+        }
+      );
 
       const data = await res.json();
       toast({
@@ -226,10 +245,6 @@ const Mainbuy = ({ params }) => {
       </div>
     );
   }
-
-  // if (status === "loading" || loading) {
-  //   return <Loading />;
-  // }
 
   return (
     <div className="flex pb-12 sm:pb-0 mt-12 sm:mt-0 flex-col gap-4 justify-start items-start w-[90%]">
@@ -284,13 +299,13 @@ const Mainbuy = ({ params }) => {
               {isPaid ? (
                 `You'll receive ${
                   orderDetails?.orderdetails?.asset
-                } in ${formatTime(time)}`
+                } in ${formatTime(timer)}`
               ) : (
                 <>
                   {" "}
                   <span> Payment time</span>
                   <span className="text-md pl-3 font-bold">
-                    {formatTime(time)}
+                    {formatTime(timer)}
                   </span>
                 </>
               )}

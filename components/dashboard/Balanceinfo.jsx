@@ -102,10 +102,15 @@ const Balanceinfo = ({ assets, session, loggedIn, email, status }) => {
 
       const response = await res.json();
 
-      if (response.status !== 200) {
-        toast({ title: "Order Creation failed" });
+      console.log("Res", res);
+
+      if (res.status !== 200) {
+        toast({ title: response.message });
+        setLoading(false);
         return;
       }
+
+      console.log("The response is : ", response);
 
       const orderid = response.data;
 

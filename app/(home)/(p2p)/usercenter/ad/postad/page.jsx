@@ -92,13 +92,22 @@ const Postad = () => {
   };
 
   const submitAd = async () => {
-
     setShowTerms(false);
 
     let userEmail = session ? session.user.email : loggedIn ? email : null;
 
     if (!userEmail) {
       toast({ title: "Please try again later." });
+      return;
+    }
+
+    if (
+      adPrice <= 0 ||
+      adAmount <= 0 ||
+      adOrderLimitfrom <= 0 ||
+      adOrderLimitTo <= 0
+    ) {
+      toast({ title: "Please enter valid values." });
       return;
     }
 
@@ -155,9 +164,7 @@ const Postad = () => {
   }, [status, loggedIn, router]);
 
   if (status === "loading" || loading) {
-    return (
-        <Loading />
-    );
+    return <Loading />;
   }
 
   return (

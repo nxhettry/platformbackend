@@ -38,7 +38,6 @@ const Myads = () => {
         const data = await res.json();
         setMyAds(data);
       } catch (error) {
-        toast({ title: "Failed to fetch data" });
         console.log(error);
       }
     }

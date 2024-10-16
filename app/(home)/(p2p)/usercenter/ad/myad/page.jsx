@@ -123,8 +123,8 @@ const Myad = () => {
         } else {
           console.log(data.data);
         }
+         return;
       } catch (error) {
-        toast({ title: "Failed to fetch data" });
         console.log(error);
       }
     }
@@ -139,8 +139,7 @@ const Myad = () => {
     isINR,
     isAED,
     isUSD,
-    email, 
-    toast
+    email
   ]);
 
   useEffect(() => {
