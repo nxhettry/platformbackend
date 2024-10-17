@@ -40,7 +40,7 @@ const AddPayment = ({ isAddPayment, setIsAddPayment }) => {
     }
 
     try {
-      const res = await fetch("https://binaryp2p.sytes.net/api/usercenter/payment/addPaymentMethod", {
+      const res = await fetch("http://localhost:8080/api/usercenter/payment/addPaymentMethod", {
         method: "POST",
         headers: {
           "Content-Type" : "application/json",

@@ -35,7 +35,7 @@ const Deposit = () => {
 
       if (!userEmail) return;
 
-      const res = await fetch("https://binaryp2p.sytes.net/api/wallet/createBscWallet", {
+      const res = await fetch("http://localhost:8080/api/wallet/createBscWallet", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -67,7 +67,7 @@ const Deposit = () => {
 
         const userEmail = session ? session.user.email : email;
 
-        const res = await fetch("https://binaryp2p.sytes.net/api/wallet/getBscWallet", {
+        const res = await fetch("http://localhost:8080/api/wallet/getBscWallet", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

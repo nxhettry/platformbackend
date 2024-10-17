@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useLoggedIn } from "@/components/AuthContext";
 import Loading from "@/app/loading";
+import { set } from "mongoose";
 
 const Buy = () => {
   const { loggedIn } = useLoggedIn();
@@ -43,11 +44,11 @@ const Buy = () => {
 
     async function fetchAds() {
       try {
-        const res = await fetch("https://binaryp2p.sytes.net/api/p2p/ad/getallad/buy");
+        const res = await fetch("http://localhost:8080/api/p2p/ad/getallad/buy");
         const data = await res.json();
         if (isMounted) {
           setAllAds(data.data);
-          setShowAds(data.data);
+          arrangeAds(data.data);
         }
       } catch (error) {
         console.log(error);
@@ -65,6 +66,13 @@ const Buy = () => {
       clearInterval(intervalId);
     };
   }, []);
+
+  //Function to arrange the ads based on price
+  const arrangeAds = (data) => {
+    // Filter the ads on the basis of price in ascending order
+    data.sort((a, b) => a.price - b.price);
+    setShowAds(data);
+  }
 
   useEffect(() => {
     if (status === "authenticated" || loggedIn) {
