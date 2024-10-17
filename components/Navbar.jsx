@@ -34,7 +34,7 @@ const Navbar = () => {
 
     const fetchUid = async () => {
       try {
-        const res = await fetch("http://localhost:8080/api/usercenter/getUserInfo", {
+        const res = await fetch("https://binaryp2p.sytes.net/api/usercenter/getUserInfo", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

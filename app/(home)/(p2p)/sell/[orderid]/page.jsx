@@ -44,7 +44,7 @@ const Mainsell = ({ params }) => {
     const fetchDetails = async (orderid) => {
       try {
         const res = await fetch(
-          "http://localhost:8080/api/p2p/order/getThisOrder",
+          "https://binaryp2p.sytes.net/api/p2p/order/getThisOrder",
           {
             method: "POST",
             headers: {
@@ -144,7 +144,7 @@ const Mainsell = ({ params }) => {
 
   // Function to handle the release crypto button
   const releaseCrypto = async () => {
-    const res = await fetch("http://localhost:8080/api/p2p/order/releaseCrypto", {
+    const res = await fetch("https://binaryp2p.sytes.net/api/p2p/order/releaseCrypto", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
