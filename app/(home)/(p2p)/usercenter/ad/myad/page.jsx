@@ -10,6 +10,7 @@ import { FaCaretDown, FaCaretUp } from "react-icons/fa";
 import Image from "next/image";
 import { History, Plus, Edit, Trash2 } from "lucide-react";
 import Loading from "@/app/loading";
+import { set } from "mongoose";
 
 const Myad = () => {
   const router = useRouter();
@@ -21,7 +22,8 @@ const Myad = () => {
   const [mobileAds, setMobileAds] = useState([]);
   const [selectedCurrency, setSelectedCurrency] = useState("NPR");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false); //Currency Dropdown
-  const [isOnline, setIsOnline] = React.useState(true);
+  const [isOnline, setIsOnline] = React.useState(false);
+  const [isAll, setIsAll] = React.useState(true);
   const [isOffline, setIsOffline] = React.useState(false);
   const [isBuy, setIsBuy] = React.useState(false);
   const [isNPR, setIsNPR] = React.useState(true);
@@ -63,14 +65,27 @@ const Myad = () => {
     }
   };
 
+
   const handleOnlineClick = () => {
-    setIsOnline(true);
+    if (isOnline) {
+      setIsAll(true);
+    } else {
+      setIsAll(false);
+    }
+    setIsOnline(!isOnline);
     setIsOffline(false);
+
   };
 
   const handleOfflineClick = () => {
     setIsOnline(false);
-    setIsOffline(true);
+    if (isOffline) {
+      setIsAll(true);
+    } else {
+      setIsAll(false);
+    }
+    setIsOffline(!isOffline);
+
   };
 
   const handleStatusChange = async (adId) => {
@@ -190,6 +205,7 @@ const Myad = () => {
       isBuy,
       isOnline,
       isOffline,
+      isAll,
       isNPR,
       isINR,
       isAED,
@@ -239,6 +255,7 @@ const Myad = () => {
     isBuy,
     isOnline,
     isOffline,
+    isAll,
     isNPR,
     isINR,
     isAED,
@@ -268,7 +285,7 @@ const Myad = () => {
       {/* Header for mobile screen */}
       <div className="md:hidden flex gap-3 pl-4 pr-8 flex-col gap-x-32 w-full justify-start">
         {/* Top section  */}
-        <div className="sm:hidden w-full flex justify-between items-center">
+        <div className="md:hidden w-full flex justify-between items-center">
           {/* Title */}
           <h1 className="text-lg font-bold text-center">My Ads</h1>
 
@@ -289,7 +306,7 @@ const Myad = () => {
         </div>
 
         {/* second section */}
-        <div className="sm:hidden font-bold text-xs w-full flex justify-start gap-4 items-center">
+        <div className="md:hidden font-bold text-xs w-full flex justify-start gap-4 items-center">
           {/* toggle BUy / Sell */}
           <div className="flex justify-center items-center gap-2">
             <p className="text-green-500 text-sm">Buy</p>
@@ -339,9 +356,9 @@ const Myad = () => {
 
             {isDropdownOpen && (
               <div className="absolute mt-2 bg-white border rounded-md shadow-lg z-10 w-20 sm:w-40">
-                {currencies.map((currency) => (
-                  <div
-                    key={currency.code}
+                {currencies.map((currency, index) => (
+                   <div
+                    key={index}
                     className={`flex items-center gap-1 cursor-pointer p-2 ${
                       selectedCurrency === currency.code
                         ? "text-mainColor bg-gray-200" // Highlight selected item
