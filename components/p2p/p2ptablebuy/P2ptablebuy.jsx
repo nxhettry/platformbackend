@@ -16,7 +16,7 @@ const P2ptablebuy = ({ fromHome, showAds }) => {
   return (
     <>
       {/* This is for smaller screens size */}
-      <div className="pb-16 sm:hidden w-full px-2">
+      <div className=" sm:hidden w-full px-2">
         <Merchantdatabuy showAds={showAds} fromHome={fromHome} />
       </div>
 

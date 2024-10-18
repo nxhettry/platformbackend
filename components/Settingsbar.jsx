@@ -59,7 +59,7 @@ const Settingsbar = ({
                     onClick={() => handleAssetSelect("USDT")}
                     className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex justify-center items-center gap-2 w-full text-left"
                   >
-                    <Image src="/usdt.svg" alt="USDT" width={20} height={20} />
+                    <Image src="/USDT.svg" alt="USDT" width={20} height={20} />
                     <span>USDT</span>
                   </button>
                 </li>

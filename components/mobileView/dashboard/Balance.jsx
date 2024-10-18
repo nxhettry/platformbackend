@@ -5,18 +5,17 @@ import Link from "next/link";
 import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
-import paymentCategory from "@/components/Paymentinp";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
+
 const Balance = ({ assets, session, loggedIn, email }) => {
+  const { toast } = useToast();
   const [showBalance, setShowBalance] = useState(false);
   const [selectedAsset, setSelectedAsset] = useState("USDT");
   const router = useRouter();
@@ -84,7 +83,7 @@ const Balance = ({ assets, session, loggedIn, email }) => {
 
     //Make a request to the server to carry out the swift p2p
     try {
-      const res = await fetch("/api/p2p/createSwiftBuy", {
+      const res = await fetch("http://localhost:8080/api/p2p/order/createSwiftBuy", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -99,22 +98,23 @@ const Balance = ({ assets, session, loggedIn, email }) => {
 
       const response = await res.json();
 
-      if (response.status !== 200) {
+      if (res.status !== 200) {
         toast({ title: "Order Creation failed" });
         return;
       }
 
-      orderid = response.data;
-      toast({ title: "Order Created Successfully" });
+      if (res.status === 200) {
+        toast({ title: "Order Created Successfully" });
+
+        setShowDrawer(false);
+        setSwiftBuyAmount("");
+        setSwiftBuyMethods([]);
+        router.push(`/buy/${response.data}`);
+
+      }
     } catch (error) {
       console.log(error);
     }
-
-    setSwiftBuyAmount("");
-    setSwiftBuyMethods([]);
-
-    if(!orderid) return;
-    router.push(`/buy/${orderid}`);
   };
 
   const selectedAssetData = assets?.find(
@@ -157,9 +157,6 @@ const Balance = ({ assets, session, loggedIn, email }) => {
             </svg>
           )}
         </div>
-        <p className="text-xl font-bold">
-          {!showBalance ? "+$100   +10%" : "*****"}{" "}
-        </p>
       </div>
       <TbHistory className="absolute top-2 right-3 text-2xl font-bold" />
       <div className="flex w-full gap-2 px-4 justify-between items-center">
@@ -263,15 +260,15 @@ const Balance = ({ assets, session, loggedIn, email }) => {
                           </label>
                         ))}
                       </div>
-                    </div>
-                    <DialogFooter>
-                      <Button
+
+                      <button
                         onTouchStart={handleSwiftP2P}
                         className="h-12 w-full rounded-lg  bg-mainColor text-center text-black"
                       >
                         Buy USDT
-                      </Button>
-                    </DialogFooter>
+                      </button>
+                    </div>
+
                   </DialogContent>
                 )}
               </Dialog>
@@ -285,10 +282,10 @@ const Balance = ({ assets, session, loggedIn, email }) => {
           Withdraw
         </Link>
         <Link
-          href="/dashboard"
+          href="/wallet/transactions"
           className="p-1 text-xl text-center bg-slate-100 w-full rounded-xl"
         >
-          Pay
+          History
         </Link>
       </div>
     </div>

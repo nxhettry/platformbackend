@@ -25,6 +25,7 @@ const Dashboard = () => {
   const [ethChange, setEthChange] = useState("0%");
   const [bnbChange, setBnbChange] = useState("0%");
   const [userAssets, setUserAssets] = useState([]);
+  const [frozenAssets, setFrozenAssets] = useState([]);
   const [username, setUsername] = useState("");
   const [uid, setUid] = useState("");
   const { loggedIn, email } = useLoggedIn();
@@ -80,7 +81,7 @@ const Dashboard = () => {
     const userEmail = session ? session.user.email : email;
     const fetchBalance = async () => {
       try {
-        const res = await fetch("https://binaryp2p.sytes.net/api/balance/getbalance", {
+        const res = await fetch("http://localhost:8080/api/balance/getbalance", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -89,7 +90,8 @@ const Dashboard = () => {
         });
 
         const response = await res.json();
-        setUserAssets(response.data);
+        setUserAssets(response.data.userAssets);
+        setFrozenAssets(response.data.frozenUserAssets);
       } catch (error) {
         console.log(error);
       }
@@ -98,7 +100,7 @@ const Dashboard = () => {
     fetchBalance();
 
     const userDetails = async () => {
-      const res = await fetch("https://binaryp2p.sytes.net/api/usercenter/getUserInfo", {
+      const res = await fetch("http://localhost:8080/api/usercenter/getUserInfo", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -187,7 +189,7 @@ const Dashboard = () => {
         />
         <Buttongroup />
         <Banner />
-        <Mobileassets assets={assets} />
+        <Mobileassets assets={assets} frozenAssets={frozenAssets} />
         <Bottomnav />
       </div>
 

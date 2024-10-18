@@ -2,7 +2,23 @@ import React from "react";
 import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
 import Link from "next/link";
 
-const Mobileassets = ({ assets }) => {
+const Mobileassets = ({ assets, frozenAssets }) => {
+  ;
+
+  function getFrozenAmount(coin) {
+    let theCoin = frozenAssets.find((asset) => {
+      asset.asset === coin;
+    });
+
+    console.log("the coin is :", theCoin);
+
+    // if(theCoin.amount > 0) {
+    //   return theCoin.amount;
+    // } else {
+    return 0;
+    // }
+  }
+
   return (
     <div className="w-full pb-20 flex flex-col gap-4 items-start bg-white rounded-lg">
       <table className="w-full border-collapse text-left">
@@ -83,8 +99,8 @@ const Mobileassets = ({ assets }) => {
                           </div>
                           <div>
                             <p>Frozen</p>
-                            <h3 className="text-lg font-bold">0.00</h3>
-                            <p className="text-sm">≈$0.00</p>
+                            <h3 className="text-lg font-bold">{(frozenAssets.find((item) => item.asset === asset.coin))?.amount.toFixed(2)}</h3>
+                            <p className="text-sm">≈${(frozenAssets.find((item) => item.asset === asset.coin))?.amount.toFixed(2)}</p>
                           </div>
                         </div>
 

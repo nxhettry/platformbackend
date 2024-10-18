@@ -33,7 +33,7 @@ const Myads = () => {
           toast({ title: "Could not catch email" });
         }
         const res = await fetch(
-          `https://binaryp2p.sytes.net/api/p2p/ad/getallad/myads?email=${encodeURIComponent(
+          `http://localhost:8080/api/p2p/ad/getallad/myads?email=${encodeURIComponent(
             userEmail
           )}`
         );
@@ -59,7 +59,7 @@ const Myads = () => {
 
     if (!userEmail) return;
 
-    const res = await fetch("https://binaryp2p.sytes.net/api/p2p/ad/updatead/delete", {
+    const res = await fetch("http://localhost:8080/api/p2p/ad/updatead/delete", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -98,7 +98,7 @@ const Myads = () => {
       return;
     }
 
-    const res = await fetch("https://binaryp2p.sytes.net/api/p2p/ad/updatead/edit", {
+    const res = await fetch("http://localhost:8080/api/p2p/ad/updatead/edit", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -131,7 +131,7 @@ const Myads = () => {
 
     if (!userEmail) return;
 
-    const res = await fetch ("https://binaryp2p.sytes.net/api/p2p/ad/updatead/status", {
+    const res = await fetch ("http://localhost:8080/api/p2p/ad/updatead/status", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
