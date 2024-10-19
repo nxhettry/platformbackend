@@ -51,7 +51,7 @@ const Usercenter = () => {
     //Fetching the payment methods
     const fetchPaymentMethods = async (userEmail) => {
       try {
-        const res = await fetch("https://binaryp2psytes.net/api/usercenter/payment/getAll", {
+        const res = await fetch("https://binaryp2p.sytes.net/api/usercenter/payment/getAll", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -74,7 +74,7 @@ const Usercenter = () => {
 
     const fetchUserInfo = async (userEmail) => {
       try {
-        const res = await fetch("https://binaryp2psytes.net/api/usercenter/getUserInfo", {
+        const res = await fetch("https://binaryp2p.sytes.net/api/usercenter/getUserInfo", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -133,7 +133,7 @@ const Usercenter = () => {
     toast({ title: newUserName });
 
     try {
-      const res = await fetch("https://binaryp2psytes.net/api/usercenter/updateUsername", {
+      const res = await fetch("https://binaryp2p.sytes.net/api/usercenter/updateUsername", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

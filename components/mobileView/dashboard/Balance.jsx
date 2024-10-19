@@ -83,7 +83,7 @@ const Balance = ({ assets, session, loggedIn, email }) => {
 
     //Make a request to the server to carry out the swift p2p
     try {
-      const res = await fetch("https://binaryp2psytes.net/api/p2p/order/createSwiftBuy", {
+      const res = await fetch("https://binaryp2p.sytes.net/api/p2p/order/createSwiftBuy", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

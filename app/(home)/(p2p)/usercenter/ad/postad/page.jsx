@@ -129,7 +129,7 @@ const Postad = () => {
 
     // Submit the data to the server
     try {
-      const res = await fetch("https://binaryp2psytes.net/api/p2p/ad/postad", {
+      const res = await fetch("https://binaryp2p.sytes.net/api/p2p/ad/postad", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

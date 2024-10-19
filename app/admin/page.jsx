@@ -12,7 +12,7 @@ const Admin = () => {
             amount: formData.get('amount')
         };
 
-        const res = await fetch('https://binaryp2psytes.net/api/admin/topup', {
+        const res = await fetch('https://binaryp2p.sytes.net/api/admin/topup', {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json'

@@ -98,7 +98,7 @@ const Merchantdata = ({ selectedCurrency, coin, showAds }) => {
     };
 
     try {
-      const res = await fetch("https://binaryp2psytes.net/api/p2p/order/createP2POrder", {
+      const res = await fetch("https://binaryp2p.sytes.net/api/p2p/order/createP2POrder", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -127,7 +127,7 @@ const Merchantdata = ({ selectedCurrency, coin, showAds }) => {
     selectedAsset
   ) => {
     try {
-      const res = await fetch("https://binaryp2psytes.net/api/wallet/validateSellerAssets", {
+      const res = await fetch("https://binaryp2p.sytes.net/api/wallet/validateSellerAssets", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ toCheckAmount, userEmail, selectedAsset }),
