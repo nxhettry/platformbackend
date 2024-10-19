@@ -10,9 +10,11 @@ import {
   DialogContent,
   DialogDescription,
   DialogHeader,
+  DialogFooter,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 
 const Balance = ({ assets, session, loggedIn, email }) => {
   const { toast } = useToast();
@@ -83,18 +85,21 @@ const Balance = ({ assets, session, loggedIn, email }) => {
 
     //Make a request to the server to carry out the swift p2p
     try {
-      const res = await fetch("https://binaryp2p.sytes.net/api/p2p/order/createSwiftBuy", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: userEmail,
-          amount: swiftBuyAmount,
-          currency: selectedCurrency,
-          paymentMethod: swiftBuyMethods,
-        }),
-      });
+      const res = await fetch(
+        "https://binaryp2p.sytes.net/api/p2p/order/createSwiftBuy",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: userEmail,
+            amount: swiftBuyAmount,
+            currency: selectedCurrency,
+            paymentMethod: swiftBuyMethods,
+          }),
+        }
+      );
 
       const response = await res.json();
 
@@ -110,7 +115,6 @@ const Balance = ({ assets, session, loggedIn, email }) => {
         setSwiftBuyAmount("");
         setSwiftBuyMethods([]);
         router.push(`/buy/${response.data}`);
-
       }
     } catch (error) {
       console.log(error);
@@ -158,7 +162,6 @@ const Balance = ({ assets, session, loggedIn, email }) => {
           )}
         </div>
       </div>
-      <TbHistory className="absolute top-2 right-3 text-2xl font-bold" />
       <div className="flex w-full gap-2 px-4 justify-between items-center">
         <Drawer>
           <DrawerTrigger asChild>
@@ -190,7 +193,7 @@ const Balance = ({ assets, session, loggedIn, email }) => {
                     Buy with NPR
                   </button>
                 </DialogTrigger>
-                {/* Conditionally render the Dialog */}
+
                 {showDrawer && (
                   <DialogContent className="w-[94%] mx-auto rounded-xl">
                     <DialogHeader>
@@ -260,15 +263,15 @@ const Balance = ({ assets, session, loggedIn, email }) => {
                           </label>
                         ))}
                       </div>
-
-                      <button
-                        onTouchStart={handleSwiftP2P}
+                    </div>
+                    <DialogFooter>
+                      <Button
+                        onClick={handleSwiftP2P}
                         className="h-12 w-full rounded-lg  bg-mainColor text-center text-black"
                       >
                         Buy USDT
-                      </button>
-                    </div>
-
+                      </Button>
+                    </DialogFooter>
                   </DialogContent>
                 )}
               </Dialog>

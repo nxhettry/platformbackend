@@ -1,23 +1,33 @@
-import React from "react";
+"use client";
+import React, { useEffect, useState } from "react";
 import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
 import Link from "next/link";
+import { useLoggedIn } from "@/components/AuthContext";
+import { getTransactions } from "@/lib/getTransactions";
 
 const Mobileassets = ({ assets, frozenAssets }) => {
-  ;
+  const { loggedIn, email } = useLoggedIn();
+  const [transactions, setTransactions] = useState([]);
+  const [UID, setUID] = useState("");
 
-  function getFrozenAmount(coin) {
-    let theCoin = frozenAssets.find((asset) => {
-      asset.asset === coin;
-    });
+  useEffect(() => {
+    if (!loggedIn) return;
 
-    console.log("the coin is :", theCoin);
+    const fetchData = async () => {
+      const result = await getTransactions(email);
 
-    // if(theCoin.amount > 0) {
-    //   return theCoin.amount;
-    // } else {
-    return 0;
-    // }
-  }
+      if (result.transactions.length > 0) {
+        setTransactions(result.transactions);
+        setUID(result.UID);
+      } else {
+        setTransactions([]);
+      }
+    };
+
+    setInterval(() => {
+      fetchData();
+    }, 10000);
+  }, [loggedIn, email]);
 
   return (
     <div className="w-full pb-20 flex flex-col gap-4 items-start bg-white rounded-lg">
@@ -86,87 +96,113 @@ const Mobileassets = ({ assets, frozenAssets }) => {
 
                         {/* Balance Section */}
                         <div className="mt-4 text-center">
-                          <h2 className="text-3xl font-bold">{asset.amount?.toFixed(2)}</h2>
-                          <p className="text-sm text-gray-500">≈${asset.value?.toFixed(2)}</p>
+                          <h2 className="text-3xl font-bold">
+                            {asset.amount?.toFixed(2)}
+                          </h2>
+                          <p className="text-sm text-gray-500">
+                            ≈${asset.value?.toFixed(2)}
+                          </p>
                         </div>
 
                         {/* Available and Frozen Balance */}
                         <div className="flex justify-between mt-4 text-center text-gray-500">
                           <div>
                             <p>Available</p>
-                            <h3 className="text-lg font-bold">{asset.amount?.toFixed(2)}</h3>
-                            <p className="text-sm">≈${asset.value?.toFixed(2)}</p>
+                            <h3 className="text-lg font-bold">
+                              {asset.amount?.toFixed(2)}
+                            </h3>
+                            <p className="text-sm">
+                              ≈${asset.value?.toFixed(2)}
+                            </p>
                           </div>
                           <div>
                             <p>Frozen</p>
-                            <h3 className="text-lg font-bold">{(frozenAssets.find((item) => item.asset === asset.coin))?.amount.toFixed(2)}</h3>
-                            <p className="text-sm">≈${(frozenAssets.find((item) => item.asset === asset.coin))?.amount.toFixed(2)}</p>
+                            <h3 className="text-lg font-bold">
+                              {frozenAssets
+                                .find((item) => item.asset === asset.coin)
+                                ?.amount.toFixed(2)}
+                            </h3>
+                            <p className="text-sm">
+                              ≈$
+                              {frozenAssets
+                                .find((item) => item.asset === asset.coin)
+                                ?.amount.toFixed(2)}
+                            </p>
                           </div>
                         </div>
 
                         {/* History Section */}
-                        <div className="mt-6">
+                        <div className="mt-6 overflow-y-scroll">
                           <h3 className="text-lg font-semibold">History</h3>
                           <div className="mt-2">
-                            {/* Withdrawal */}
-                            <div className="flex justify-between text-sm">
-                              <div>
-                                <p className="font-semibold">Withdrawal</p>
-                                <p className="text-gray-500">
-                                  2024-09-17 18:16:42
-                                </p>
-                              </div>
-                              <div className="text-right">
-                                <p className="font-semibold">
-                                  1020.344693 USDT
-                                </p>
-                                <p className="text-green-500">
-                                  Withdrawal succeeded
-                                </p>
-                              </div>
-                            </div>
-
-                            {/* Deposit */}
-                            <div className="flex justify-between text-sm mt-4">
-                              <div>
-                                <p className="font-semibold">Deposit</p>
-                                <p className="text-gray-500">
-                                  2024-09-17 18:05:05
-                                </p>
-                              </div>
-                              <div className="text-right">
-                                <p className="font-semibold">308.217834 USDT</p>
-                                <p className="text-green-500">
-                                  Deposit succeeded
-                                </p>
-                              </div>
-                            </div>
-
-                            {/* Deposit */}
-                            <div className="flex justify-between text-sm mt-4">
-                              <div>
-                                <p className="font-semibold">Deposit</p>
-                                <p className="text-gray-500">
-                                  2024-09-09 20:43:38
-                                </p>
-                              </div>
-                              <div className="text-right">
-                                <p className="font-semibold">400 USDT</p>
-                                <p className="text-green-500">
-                                  Deposit succeeded
-                                </p>
-                              </div>
-                            </div>
-
+                            {transactions.length > 0 ? (
+                              transactions.map((transaction, index) => {
+                                return (
+                                  <Link
+                                    href={`/${
+                                      UID.toLowerCase() ===
+                                      transaction.buyer.toLowerCase()
+                                        ? "buy"
+                                        : "sell"
+                                    }/${transaction.orderid}`}
+                                    key={index}
+                                    className="font-bold border-b border-slate-100 pb-1 text-sm w-full flex justify-between items-center"
+                                  >
+                                    <div>
+                                      <p
+                                        className={`font-semibold ${
+                                          UID.toLowerCase() ===
+                                          transaction.buyer.toLowerCase()
+                                            ? "text-green-500"
+                                            : "text-red-500"
+                                        }`}
+                                      >
+                                        {UID.toLowerCase() ===
+                                        transaction.buyer.toLowerCase()
+                                          ? "buy"
+                                          : "sell"}
+                                      </p>
+                                      <p className="text-gray-500">
+                                        {new Date(
+                                          transaction.createdAt
+                                        ).toLocaleString()}
+                                      </p>
+                                    </div>
+                                    <div className="text-right">
+                                      <p className="font-semibold">
+                                        {UID.toLowerCase() ===
+                                        transaction.buyer.toLowerCase()
+                                          ? `+${transaction.orderdetails.totalAsset.toFixed(
+                                              2
+                                            )}`
+                                          : `-${transaction.orderdetails.totalAsset.toFixed(
+                                              2
+                                            )}`}{" "}
+                                        {transaction.orderdetails.asset}
+                                      </p>
+                                      <p className="text-green-500">Sucess</p>
+                                    </div>
+                                  </Link>
+                                );
+                              })
+                            ) : (
+                              <div>No transactions found</div>
+                            )}
                           </div>
                         </div>
 
                         {/* Bottom Buttons */}
                         <div className="flex justify-around mt-6">
-                          <Link href="/wallet/deposit" className="bg-gray-200 w-32 text-center rounded-lg py-2 text-black font-semibold hover:bg-gray-300">
+                          <Link
+                            href="/wallet/deposit"
+                            className="bg-gray-200 w-32 text-center rounded-lg py-2 text-black font-semibold hover:bg-gray-300"
+                          >
                             Deposit
                           </Link>
-                          <Link href="/wallet/withdraw" className="bg-mainColor w-32 text-center rounded-lg py-2 text-white font-semibold hover:bg-mainColor-dark">
+                          <Link
+                            href="/wallet/withdraw"
+                            className="bg-mainColor w-32 text-center rounded-lg py-2 text-white font-semibold hover:bg-mainColor-dark"
+                          >
                             Withdraw
                           </Link>
                         </div>
