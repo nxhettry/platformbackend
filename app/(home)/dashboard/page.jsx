@@ -81,7 +81,7 @@ const Dashboard = () => {
     const userEmail = session ? session.user.email : email;
     const fetchBalance = async () => {
       try {
-        const res = await fetch("http://localhost:8080/api/balance/getbalance", {
+        const res = await fetch("https://binaryp2psytes.net/api/balance/getbalance", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -100,7 +100,7 @@ const Dashboard = () => {
     fetchBalance();
 
     const userDetails = async () => {
-      const res = await fetch("http://localhost:8080/api/usercenter/getUserInfo", {
+      const res = await fetch("https://binaryp2psytes.net/api/usercenter/getUserInfo", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

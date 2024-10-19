@@ -8,27 +8,27 @@ module.exports = {
   ],
   theme: {
   	extend: {
-  		backgroundImage: {
-  			'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-  			'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))'
-  		},
-  		backgroundColor: {
-  			mainColor: '#b9f641',
-  			appBg: '#eaf7fa',
-			navBg: "#f8f6f1",
-  		},
-  		textColor: {
-  			mainColor: '#b9f641',
-  			hoverNav: '#a3ddf0'
-  		},
-  		borderColor: {
-  			mainColor: '#b9f641'
-  		},
-  		borderRadius: {
-  			lg: 'var(--radius)',
-  			md: 'calc(var(--radius) - 2px)',
-  			sm: 'calc(var(--radius) - 4px)'
-  		},
+		backgroundImage: {
+			'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+			'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))'
+		},
+		backgroundColor: {
+			mainColor: '#65bed8',
+			appBg: '#eaf7fa',
+		  navBg: "#f8f6f1",
+		},
+		textColor: {
+			mainColor: '#4395ac',
+			hoverNav: '#a3ddf0'
+		},
+		borderColor: {
+			mainColor: '#fcd535'
+		},
+		borderRadius: {
+			lg: 'var(--radius)',
+			md: 'calc(var(--radius) - 2px)',
+			sm: 'calc(var(--radius) - 4px)'
+		},
   		colors: {
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',

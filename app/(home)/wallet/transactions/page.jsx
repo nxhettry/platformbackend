@@ -5,7 +5,7 @@ import { useToast } from "@/hooks/use-toast";
 import Link from "next/link";
 
 async function getTransactions(email) {
-    const res = await fetch("http://localhost:8080/api/wallet/getAllTransactions", {
+    const res = await fetch("https://binaryp2psytes.net/api/wallet/getAllTransactions", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",

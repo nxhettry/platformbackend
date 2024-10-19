@@ -43,7 +43,7 @@ const Sell = () => {
 
     async function fetchAds() {
       try {
-        const res = await fetch("http://localhost:8080/api/p2p/ad/getallad/sell");
+        const res = await fetch("https://binaryp2psytes.net/api/p2p/ad/getallad/sell");
         const data = await res.json();
         if (isMounted) {
           setAllAds(data.data);

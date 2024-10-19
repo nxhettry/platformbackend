@@ -82,7 +82,7 @@ const Withdraw = () => {
 
 
 
-      const res = await fetch("http://localhost:8080/api/wallet/createWithdrawal", {
+      const res = await fetch("https://binaryp2psytes.net/api/wallet/createWithdrawal", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -115,7 +115,7 @@ const Withdraw = () => {
 
     // Fetch the user balance
     try {
-      const res = await fetch("http://localhost:8080/api/wallet/validateWithdrawal", {
+      const res = await fetch("https://binaryp2psytes.net/api/wallet/validateWithdrawal", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
