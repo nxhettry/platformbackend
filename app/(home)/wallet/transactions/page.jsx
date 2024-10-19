@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { useLoggedIn } from "@/components/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import Link from "next/link";
-import { getTransactions } from "@/lib/transactions";
+import { getTransactions } from "@/lib/getTransactions";
 
 
 export default function Transactions() {
