@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useLoggedIn } from "@/components/AuthContext";
 import Loading from "@/app/loading";
+import { set } from "mongoose";
 
 const Buy = () => {
   const { loggedIn } = useLoggedIn();
@@ -47,7 +48,7 @@ const Buy = () => {
         const data = await res.json();
         if (isMounted) {
           setAllAds(data.data);
-          setShowAds(data.data);
+          arrangeAds(data.data);
         }
       } catch (error) {
         console.log(error);
@@ -65,6 +66,13 @@ const Buy = () => {
       clearInterval(intervalId);
     };
   }, []);
+
+  //Function to arrange the ads based on price
+  const arrangeAds = (data) => {
+    // Filter the ads on the basis of price in ascending order
+    data.sort((a, b) => a.price - b.price);
+    setShowAds(data);
+  }
 
   useEffect(() => {
     if (status === "authenticated" || loggedIn) {

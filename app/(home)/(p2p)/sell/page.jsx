@@ -47,7 +47,7 @@ const Sell = () => {
         const data = await res.json();
         if (isMounted) {
           setAllAds(data.data);
-          setShowAds(data.data);
+          arrangeAds(data.data);
         }
       } catch (error) {
         console.log(error);
@@ -65,6 +65,13 @@ const Sell = () => {
       clearInterval(intervalId);
     };
   }, []);
+
+    //Function to arrange the ads based on price
+    const arrangeAds = (data) => {
+      // Filter the ads on the basis of price in descending order
+      data.sort((a, b) => { return b.price - a.price });
+      setShowAds(data);
+    }
 
   useEffect(() => {
     if (status === "authenticated" || loggedIn) {

@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/dialog";
 import { TextareaAutosize } from "@mui/material";
 import Loading from "@/app/loading";
+import AddPayment from "@/components/p2p/Addpayment";
 
 const Postad = () => {
   const { toast } = useToast();
@@ -34,6 +35,7 @@ const Postad = () => {
   const [adOrderLimitfrom, setAdOrderLimitfrom] = useState("");
   const [adOrderLimitTo, setAdOrderLimitTo] = useState("");
   const [adTimeLimitinmins, setAdTimeLimitinmins] = useState("5");
+  const [showAddPayment, setShowAddPayment] = useState(false);
   const [filteredPaymentMethods, setFilteredPaymentMethods] = useState([]);
   const [selectedPaymentMethods, setSelectedPaymentMethods] = useState([]);
 
@@ -138,6 +140,11 @@ const Postad = () => {
       const responseData = await res.json();
 
       if (res.status !== 200) {
+
+        if(responseData.message === "Please add all payment methods selected before posting an ad") {
+          setShowAddPayment(true);
+        }
+
         toast({ title: responseData.message });
         return;
       }
@@ -373,6 +380,12 @@ const Postad = () => {
           </Dialog>
         </form>
       </div>
+
+      {
+        showAddPayment && <div className="fixed h-screen w-screen flex justify-center items-center">
+          <AddPayment isAddPayment={showAddPayment} setIsAddPayment={setShowAddPayment} />
+        </div>
+      }
     </div>
   );
 };
